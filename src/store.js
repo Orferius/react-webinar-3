@@ -80,6 +80,14 @@ class Store {
       })
     })
   }
+
+  getWordForm(num){
+    const lastDigit = num % 100; 
+    const lastTwoDigits = num % 10;
+    if (lastDigit > 10 && lastDigit < 20) { return 'раз' }
+    if (lastTwoDigits > 1 && lastTwoDigits < 5) { return 'раза' }
+    return 'раз';
+  }
 }
 
 export default Store;
