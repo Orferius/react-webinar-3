@@ -16,12 +16,6 @@ const store = new Store({
   ]
 });
 
-const addCount = (arr) => {
-  return [...arr].map(item => {item.count = 0; return item});
-}
-
-addCount(store.state.list);
-
 const root = createRoot(document.getElementById('root'));
 
 store.subscribe(() => {

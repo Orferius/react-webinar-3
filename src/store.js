@@ -1,12 +1,13 @@
+import { codeGenerator } from "./utils";
+
 /**
  * Хранилище состояния приложения
  */
 class Store {
   constructor(initState = {}) {
-    this.counter = 0;
     this.state = initState;
-    this.startQuant = this.state.list[this.state.list.length - 1];
     this.listeners = []; // Слушатели изменений состояния
+    this.generatedCode = codeGenerator(this.state.list);
   }
 
   /**
@@ -44,10 +45,9 @@ class Store {
    * Добавление новой записи
    */
   addItem() {
-    this.counter++;
     this.setState({
       ...this.state,
-      list: [...this.state.list, {code: this.startQuant.code + this.counter, title: 'Новая запись', count: 0}]
+      list: [...this.state.list, {code: this.generatedCode(), title: 'Новая запись'}]
     })
   };
 
@@ -70,9 +70,13 @@ class Store {
     this.setState({
       ...this.state,
       list: this.state.list.map(item => {
+        // Добавление поля count в элементы массива list в случае отсутствия такого поля
+        !item.count ? item.count = 0 : item.count;
         if (item.code === code) {
           item.selected = !item.selected;
-          item.selected ? item.count++ : item.count--;
+          // Убрала уменьшение счетчика при снятии выделения с задачи, чтобы было видно
+          // что задача выделялась даже 1 раз (ранее при двух кликах подряд на задачу нажатие обнулялось)
+          item.selected ? item.count++ : item.count;
 				} else {
 					item.selected = false;
         }
@@ -81,12 +85,15 @@ class Store {
     })
   }
 
-  getWordForm(num){
+  // Добавила массив в параметры
+  getWordForm(num, arr){
     const lastDigit = num % 100; 
     const lastTwoDigits = num % 10;
-    if (lastDigit > 10 && lastDigit < 20) { return 'раз' }
-    if (lastTwoDigits > 1 && lastTwoDigits < 5) { return 'раза' }
-    return 'раз';
+    if (lastDigit > 10 && lastDigit < 20) { return arr[2] }
+    if (lastTwoDigits > 1 && lastTwoDigits < 5) { return arr[1] }
+    // Добавила проверку числа, заканчивающегося на единицу, для случая, когда у слова 3 варианта окончаний
+    if (lastTwoDigits === 1) { return arr[0] }
+    return arr[2];
   }
 }
 

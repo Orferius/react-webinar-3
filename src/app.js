@@ -8,8 +8,9 @@ import './styles.css';
  * @returns {React.ReactElement}
  */
 function App({store}) {
-
+  
   const list = store.getState().list;
+  const wordsArr = ['раз', 'раза', 'раз'];
 
   return (
     <div className='App'>
@@ -26,7 +27,7 @@ function App({store}) {
               <div className={'Item' + (item.selected ? ' Item_selected' : '')}
                    onClick={() => store.selectItem(item.code)}>
                 <div className='Item-code'>{item.code}</div>
-                <div className='Item-title'>{item.title} {item.count > 0 ? `| Выделяли ${item.count} ${store.getWordForm(item.count)}` : ''}</div>
+                <div className='Item-title'>{item.title} {item.count > 0 ? `| Выделяли ${item.count} ${store.getWordForm(item.count, wordsArr)}` : ''}</div>
                 <div className='Item-actions'>
                   <button onClick={() => store.deleteItem(item.code)}>
                     Удалить

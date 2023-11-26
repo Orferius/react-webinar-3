@@ -26,3 +26,16 @@ export function createElement(name, props = {}, ...children) {
 
   return element;
 }
+
+export function codeGenerator(arr){
+  const codesArray = arr.map(item => item.code);
+  let nextCode = Math.max(...codesArray, 0) + 1;
+
+  return function(){
+    while(codesArray.includes(nextCode)){
+      nextCode++;
+    }
+    codesArray.push(nextCode);
+    return nextCode++;
+  };
+}
