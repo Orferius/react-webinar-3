@@ -1,6 +1,7 @@
 .Item {
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   transition: background-color 1s;
 }
 
@@ -16,6 +17,25 @@
 .Item-title {
   width: 100%;
   padding: 20px 10px;
+}
+
+.Item-price {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Item-price::after {
+  content: "\00a0 \20BD";
+  padding-right: 10px;
+}
+
+.Item-quantity {
+  padding-left: 52px;
+}
+
+.Item-quantity::after {
+  content: "\00a0 шт";
+  padding-right: 24px;
 }
 
 .Item-actions {

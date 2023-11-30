@@ -3,3 +3,21 @@
   justify-content: flex-end;
   padding: 20px;
 }
+
+.Controls-title {
+  padding-right: 20px;
+  font-weight: 600;
+}
+
+.Controls-title::before {
+  content: "В корзине: ";
+  font-weight: 400;
+}
+
+.Controls-title::after {
+  content: "\00a0 \20BD";
+}
+
+.Controls-button {
+  padding: 1px 9px;
+}
