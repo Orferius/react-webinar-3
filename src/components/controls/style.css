@@ -13,11 +13,3 @@
   content: "В корзине: ";
   font-weight: 400;
 }
-
-.Controls-title::after {
-  content: "\00a0 \20BD";
-}
-
-.Controls-button {
-  padding: 1px 9px;
-}

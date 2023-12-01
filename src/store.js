@@ -43,22 +43,34 @@ class Store {
   /**
    * Добавление новой записи
    */
-  addItem() {
-    this.setState({
-      ...this.state,
-      list: [...this.state.list, {code: generateCode(), title: 'Новая запись'}]
-    })
+  addItem(product) {
+    const itemInCart = this.state.cart.findIndex((item) => item.code === product.code);
+    if (itemInCart !== -1) {
+      const newCart = this.state.cart.map((item, index) =>
+        index === itemInCart ? { ...item, count: item.count + 1 } : item
+      );
+
+      this.setState({
+        ...this.state,
+        cart: newCart,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        cart: [...this.state.cart, { ...product, count: 1 }],
+      });
+    }
   };
 
   /**
    * Удаление записи по коду
    * @param code
    */
-  deleteItem(code) {
+  deleteItem(product) {
     this.setState({
       ...this.state,
       // Новый список, в котором не будет удаляемой записи
-      list: this.state.list.filter(item => item.code !== code)
+      cart: this.state.cart.filter(item => item.code !== product.code)
     })
   };
 

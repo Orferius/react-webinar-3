@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from 'react';
+import priceFormatter from "./utils.js";
 import List from "./components/list";
 import Controls from "./components/controls";
 import Head from "./components/head";
@@ -13,64 +14,52 @@ import Modal from "./components/modal/index.js";
 function App({store}) {
 
   const list = store.getState().list;
-  const [cart, setCart] = useState([]);
+  const cart = store.getState().cart;
   const [isModalOpen, setModalOpen] = useState(false);
 
   const callbacks = {
-    deleteFromCart: useCallback((code) => {
-      setCart((prevCart) => prevCart.filter((item) => item.code !== code));
-    }),
+    onDeleteItem: useCallback((code) => {
+      store.deleteItem(code);
+    }, [store]),
 
-    openModal: useCallback(() => {
-      setModalOpen(true);
-    }),
+    toggleModal: useCallback(() => {
+      setModalOpen(!isModalOpen);
+    }, [isModalOpen]),
 
-    closeModal: useCallback(() => {
-      setModalOpen(false);
-    }),
-
-    addToCart: useCallback((product) => {
-      const itemInCart = cart.findIndex((item) => item.code === product.code);
-      if (itemInCart !== -1) {
-        setCart((prevCart) =>
-          prevCart.map((item, index) =>
-            index === itemInCart ? { ...item, count: item.count + 1 } : item
-          )
-        );
-      } else {
-        setCart((prevCart) => [...prevCart, { ...product, count: 1 }]);
-      }
-    }),
-
-    sumTotal: useCallback((cart) => {
-      if (cart.length === 0) {
-        return 0;
-      }
-      const totalCost = cart.reduce((acc, item) => {
-        const itemCost = item.price * item.count;
-        return acc + itemCost;
-      }, 0)
-      return totalCost;
-    })
+    onAddItem: useCallback((product) => {
+      store.addItem(product);
+    }, [store]),
   };
+
+  const sumTotal = ((cart) => {
+    if (quantity === 0) {
+      return 0;
+    }
+    const totalCost = cart.reduce((acc, item) => {
+      const itemCost = item.price * item.count;
+      return acc + itemCost;
+    }, 0)
+    return totalCost;
+  })
+
+  const totalSum = priceFormatter(sumTotal(cart));
+  const quantity = cart.length;
 
   return (
     <PageLayout>
-      <Head title='Приложение на чистом JS'/>
+      <Head title='Магазин'/>
       <Controls
-        openCart={callbacks.openCart}
-        cart={cart}
-        openModal={callbacks.openModal}
-        sumTotal={callbacks.sumTotal}
+        quantity={quantity}
+        totalSum={totalSum}
+        toggleModal={callbacks.toggleModal}
       />
-      <List list={list} 
-            addToCart={callbacks.addToCart}/>
+      <List list={list} onClick={callbacks.onAddItem}/>
       {isModalOpen && (
         <Modal
-          cart={cart}
-          closeModal={callbacks.closeModal}
-          deleteFromCart={callbacks.deleteFromCart}
-          sumTotal={callbacks.sumTotal}
+          quantity={quantity}
+          totalSum={totalSum}
+          headProps={{ title: 'Корзина', isModalOpen: isModalOpen, toggleModal: callbacks.toggleModal }}
+          listProps={{ list: cart, isModalOpen: isModalOpen, onClick: callbacks.onDeleteItem }}
         />
       )}
     </PageLayout>

@@ -1,0 +1,8 @@
+.Button-container {
+  display: flex;
+  align-items: center;
+}
+
+.Button {
+  padding: 1px 9px;
+}
