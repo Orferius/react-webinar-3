@@ -1,0 +1,13 @@
+.Product {
+    margin: 0 40px;
+    font-size: 18px;
+}
+
+.Product-price {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.Product-price::after {
+    content: " \20BD";
+}

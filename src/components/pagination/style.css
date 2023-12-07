@@ -1,0 +1,29 @@
+.Pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 20px;
+  padding: 22px 0;
+}
+.Pagination-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+  min-width: 20px;
+}
+.Pagination-item.selected {
+  background-color: #0087E9;
+  color: #fff;
+}
+.Pagination-item:hover {
+  background-color: #E1E1E1;
+  cursor: pointer;
+}
+.Pagination-item.dots:hover {
+  background-color: transparent;
+  cursor: default;
+}
+.Pagination-item:hover {
+  background-color: #E1E1E1;
+  cursor: pointer;
+}
