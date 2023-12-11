@@ -1,6 +1,5 @@
 import { memo } from "react";
 import PropTypes from "prop-types";
-import useSelector from "../../store/use-selector";
 import {cn as bem} from '@bem-react/classname';
 import {numberFormat} from "../../utils";
 import "./style.css";
@@ -9,21 +8,17 @@ const ItemProduct = (props) => {
 
   const cn = bem('Product');
 
-  const select = useSelector((state) => ({
-    data: state.product.data,
-  }));
-
   const callbacks = {
-    onAdd: () => props.onAdd(select.data._id)
+    onAdd: () => props.onAdd(props.data._id)
   }
 
   return (
     <div className={cn()}>
-      <p className={cn('description')}>{select.data?.description}</p>
-      <p className={cn('country')}>Страна производитель: <strong>{select.data?.country?.title} ({select.data?.country?.code})</strong></p>
-      <p className={cn('category')}>Категория: <strong>{select.data?.category?.title}</strong></p>
-      <p className={cn('year')}>Год выпуска: <strong>{select.data?.year}</strong></p>
-      <p className={cn('price')}>Цена: {numberFormat(select.data?.price)}</p>
+      <p className={cn('description')}>{props.data?.description}</p>
+      <p className={cn('country')}>Страна производитель: <strong>{props.data?.country?.title} ({props.data?.country?.code})</strong></p>
+      <p className={cn('category')}>Категория: <strong>{props.data?.category?.title}</strong></p>
+      <p className={cn('year')}>Год выпуска: <strong>{props.data?.year}</strong></p>
+      <p className={cn('price')}>Цена: {numberFormat(props.data?.price)}</p>
       <button onClick={callbacks.onAdd}>Добавить</button>
     </div>
   );

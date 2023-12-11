@@ -1,0 +1,13 @@
+.Navigation {
+  display: flex;
+  align-items: center;
+}
+
+.Navigation-list {
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+.Navigation-link {
+  color: #0087e9;
+}

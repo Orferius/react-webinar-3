@@ -4,8 +4,8 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import PageLayout from "../../components/page-layout";
 import Head from "../../components/head";
-import BasketTool from "../../components/basket-tool";
 import ItemProduct from "../../components/item-product";
+import Menu from "../../components/menu";
 
 const Product = () => {
   const store = useStore();
@@ -32,12 +32,12 @@ const Product = () => {
   return (
     <PageLayout>
       <Head title={select.data?.title} />
-      <BasketTool
+      <Menu
         onOpen={callbacks.openModalBasket}
         amount={select.amount}
         sum={select.sum}
       />
-      <ItemProduct onAdd={callbacks.addToBasket}/>
+      <ItemProduct onAdd={callbacks.addToBasket} data={select.data} />
     </PageLayout>
   );
 };
