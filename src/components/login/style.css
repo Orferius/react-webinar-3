@@ -1,0 +1,39 @@
+.container {
+    margin: 60px 0 0 20px;
+    width: 203px;
+}
+
+.title {
+    font-size: 24px;
+    margin: 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.input {
+    font-size: 16px;
+    padding: 2px 0;
+}
+
+.btn {
+    margin-top: 20px;
+    width: 53px;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.errmsg {
+    margin: 20px 0 0;
+    color: red;
+}

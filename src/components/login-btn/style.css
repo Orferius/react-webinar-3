@@ -1,0 +1,19 @@
+.Login {
+  display: fixed;
+}
+
+.Login-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.Login-btn {
+    margin: 10px 20px;
+}
+
+.Login-link {
+    font-size: 13px;
+    color: black;
+    text-decoration: none;
+}

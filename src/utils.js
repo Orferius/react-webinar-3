@@ -33,3 +33,50 @@ export function codeGenerator(start = 0) {
 export function numberFormat(value, locale = 'ru-RU', options = {}) {
   return new Intl.NumberFormat(locale, options).format(value);
 }
+
+export function sortData(data) {
+  const result = [];
+  for (const obj of data) {
+    const [nextEl, index, depth] = getParent(obj, result, data);
+    let newIndex = index;
+    for (let indCurr = 0; indCurr < nextEl.length; indCurr++) {
+      const el = nextEl[nextEl.length - 1 - indCurr];
+      el.depth = depth - nextEl.length + indCurr + 1;
+      result.splice(newIndex, 0, el);
+      newIndex++;
+    };
+  };
+  return result;
+};
+
+function getParentEl(data, parentId) {
+  for (const el of data) {
+    if (el._id === parentId) {
+      return el;
+    };
+  };
+};
+
+function getParent(obj, result, data, depth = 0, currList = null) {
+  let index = 0;
+  if (currList === null) {
+    currList = [];
+  };
+
+  if (result.includes(obj)) {
+    return [currList, result.indexOf(obj) + 1, depth + obj.depth];
+  };
+
+  currList.push(obj);
+
+  if (obj.parent) {
+    depth++;
+    const [newList, newIndex, newDepth] = getParent(getParentEl(data, obj.parent._id), result, data, depth, currList);
+    depth = newDepth;
+    index = newIndex;
+  } else {
+    index = result.length;
+  }
+  
+  return [currList, index, depth];
+}
