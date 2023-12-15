@@ -1,72 +1,50 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useState, memo } from "react";
+import PropTypes from "prop-types";
+import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-const LOGIN_URL = "/api/v1/users/sign";
-
-const Login = () => {
-  const navigate = useNavigate();
+const Login = ({ logIn, error }) => {
+  const cn = bem("Login");
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    setErrorMessage("");
-  }, [login, password]);
+  const callbacks = {
+    logIn: () => logIn(login, password),
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ login, password }),
-        { headers: { "Content-Type": "application/json" } }
-      );
-      navigate("/profile");
-    } catch (error) {
-      if (!error?.response) {
-        setErrorMessage("Нет ответа от сервера");
-      } else if (
-        error.response?.data.detail ===
-        "No active account found with the given credentials"
-      ) {
-        setErrorMessage("Некорректное имя пользователя или пароль");
-      } else {
-        setErrorMessage("Ошибка входа");
-      }
-    }
+    callbacks.logIn(login, password);
   };
 
   return (
-    <div className="container">
-      <h1 className="title">Вход</h1>
-      <form onSubmit={handleSubmit} className="form">
-        <label className="label">Логин</label>
+    <div className={cn()}>
+      <h1 className={cn("title")}>Вход</h1>
+      <form onSubmit={handleSubmit} className={cn("form")}>
+        <label className={cn("label")}>Логин</label>
         <input
           type="text"
           autoComplete="on"
           onChange={(e) => setLogin(e.target.value)}
           required
-          className="input"
+          className={cn("input")}
         />
-        <label className="label">Пароль</label>
+        <label className={cn("label")}>Пароль</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="input"
+          className={cn("input")}
         />
         <p
-          className={errorMessage ? "errmsg" : "offscreen"}
+          className={error ? cn("errmsg") : cn("offscreen")}
           aria-live="assertive"
         >
-          {errorMessage}
+          {error}
         </p>
-        <button type="submit" className="btn">
+        <button type="submit" className={cn("btn")}>
           Войти
         </button>
       </form>
@@ -74,4 +52,13 @@ const Login = () => {
   );
 };
 
-export default Login;
+Login.propTypes = {
+  error: PropTypes.string,
+  logIn: PropTypes.func,
+};
+
+Login.defaultProps = {
+  logIn: () => {},
+}
+
+export default memo(Login);

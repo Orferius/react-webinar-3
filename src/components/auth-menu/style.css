@@ -1,18 +1,23 @@
-.Login {
+.AuthMenu {
   display: fixed;
 }
 
-.Login-container {
+.AuthMenu-container {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.Login-btn {
+.AuthMenu-user {
+  color: #0087E9;
+  font-size: 13px;
+}
+
+.AuthMenu-btn {
     margin: 10px 20px;
 }
 
-.Login-link {
+.AuthMenu-link {
     font-size: 13px;
     color: black;
     text-decoration: none;

@@ -1,39 +1,39 @@
-.container {
+.Login {
     margin: 60px 0 0 20px;
     width: 203px;
 }
 
-.title {
+.Login-title {
     font-size: 24px;
     margin: 0;
 }
 
-.form {
+.Login-form {
     display: flex;
     flex-direction: column;
 }
 
-.label {
+.Login-label {
     margin-top: 20px;
     font-size: 16px;
 }
 
-.input {
+.Login-input {
     font-size: 16px;
     padding: 2px 0;
 }
 
-.btn {
+.Login-btn {
     margin-top: 20px;
     width: 53px;
 }
 
-.offscreen {
+.Login-offscreen {
     position: absolute;
     left: -9999px;
 }
 
-.errmsg {
+.Login-errmsg {
     margin: 20px 0 0;
     color: red;
 }

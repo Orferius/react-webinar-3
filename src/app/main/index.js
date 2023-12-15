@@ -1,5 +1,7 @@
-import {memo} from 'react';
+import {memo, useEffect, useCallback} from 'react';
+import { useNavigate } from 'react-router-dom';
 import useStore from "../../hooks/use-store";
+import useSelector from "../../hooks/use-selector";
 import useTranslate from "../../hooks/use-translate";
 import useInit from "../../hooks/use-init";
 import Navigation from "../../containers/navigation";
@@ -8,7 +10,7 @@ import Head from "../../components/head";
 import CatalogFilter from "../../containers/catalog-filter";
 import CatalogList from "../../containers/catalog-list";
 import LocaleSelect from "../../containers/locale-select";
-import LoginBtn from '../../components/login-btn';
+import AuthMenu from '../../components/auth-menu';
 
 /**
  * Главная страница - первичная загрузка каталога
@@ -16,17 +18,39 @@ import LoginBtn from '../../components/login-btn';
 function Main() {
 
   const store = useStore();
+  const navigate = useNavigate();
 
   useInit(() => {
     store.actions.catalog.initParams();
     store.actions.category.loadCategories();
   }, [], true);
 
+  useEffect(() => {
+    store.actions.autorization.checkAuth();
+  }, []);
+
+  const select = useSelector((state) => ({
+    user: state.autorization.user,
+  }));
+
+  const callbacks = {
+    logOut: useCallback(() => {
+      store.actions.autorization.logOut();
+      navigate('/login');
+    }, [store]),
+    navigateToLogin: useCallback(() => navigate('/login')),
+  };
+
   const {t} = useTranslate();
 
   return (
     <PageLayout>
-      <LoginBtn/>
+      <AuthMenu 
+        user={select.user}
+        profileLink={"/profile"}
+        logOut={callbacks.logOut}
+        navigateToLogin={callbacks.navigateToLogin}
+      />
       <Head title={t('title')}>
         <LocaleSelect/>
       </Head>

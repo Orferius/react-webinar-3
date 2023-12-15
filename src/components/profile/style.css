@@ -1,12 +1,26 @@
-.container {
-    margin: 60px 0 0 20px;
+.Profile {
+    margin: 60px 0 30px 20px;
 }
 
-.title {
-    margin-bottom: 30px;
+.Profile-title {
+    margin: 0 0 30px;
+    font-size: 24px;
+    font-weight: 700;
 }
 
-p {
+.Profile-prop {
+    display: flex;
+    flex-direction: row;
     font-size: 18px;
-    margin: 0 0 20px;
+    margin-bottom: 20px;
+}
+
+.Profile-label {
+    margin: 0;
+    padding-right: 5px;
+}
+
+.Profile-value {
+    margin: 0;
+    font-weight: 700;
 }
