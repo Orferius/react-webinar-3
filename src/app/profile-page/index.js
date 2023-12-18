@@ -1,5 +1,4 @@
 import { memo, useCallback, useEffect } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
 import useStore from "../../hooks/use-store";
 import useSelector from "../../hooks/use-selector";
 import useTranslate from "../../hooks/use-translate";
@@ -14,31 +13,19 @@ import Profile from "../../components/profile";
 const ProfilePage = () => {
   const store = useStore();
   const { t } = useTranslate();
-  const navigate = useNavigate();
 
   const select = useSelector((state) => ({
-    user: state.autorization.user,
+    user: state.profile.data,
     waiting: state.autorization.waiting,
   }));
 
-  useEffect(() => {
-    store.actions.autorization.checkAuth();
-  }, []);
-
   const callbacks = {
-    logOut: useCallback(() => {
-      store.actions.autorization.logOut();
-      navigate('/login');
-    }, [store])
+    logOut: useCallback(() => store.actions.autorization.logOut(), [store]),
   };
-
-  if (!localStorage.getItem('token')) return <Navigate to={"/login"}/>;
 
   return (
     <PageLayout>
       <AuthMenu
-        user={select.user}
-        profileLink={"/profile"}
         logOut={callbacks.logOut}
       />
       <Head title={t("title")}>

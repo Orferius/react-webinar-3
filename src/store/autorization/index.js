@@ -6,7 +6,9 @@ class AutorizationState extends StoreModule {
     return {
       waiting: false,
       error: null,
-      user: null,
+      user: {},
+      username: "",
+      session: false,
     };
   }
 
@@ -22,24 +24,19 @@ class AutorizationState extends StoreModule {
         JSON.stringify({ login, password }),
         { headers: { "Content-Type": "application/json" } }
       );
-
-      const user = response.data.result.user;
       this.setState({
         ...this.getState(),
         waiting: false,
         error: null,
-        user: {
-          name: user.profile.name,
-          phone: user.profile.phone,
-          email: user.email,
-        }
+        username: response.data.result.user.profile.name,
+        session: true,
       });
       localStorage.setItem("token", response.data.result.token);
     } catch (error) {
       this.setState({
         ...this.getState(),
         waiting: false,
-        error: error.message,
+        error: error.response.data.error.data.issues[0].message,
       });
     }
   }
@@ -50,6 +47,7 @@ class AutorizationState extends StoreModule {
     this.setState({
       ...this.getState(),
       waiting: true,
+      user: {},
     });
 
     try {
@@ -59,21 +57,34 @@ class AutorizationState extends StoreModule {
           "X-Token": token,
         },
       });
-      const user = response.data.result;
+
+      const userData = response.data.result;
+
+      const userInfo = {
+        name: userData.profile.name,
+        phone: userData.profile.phone,
+        email: userData.email,
+      };
+
       this.setState({
         ...this.getState(),
         waiting: false,
-        user: {
-          name: user.profile.name,
-          phone: user.profile.phone,
-          email: user.email,
-        },
+        user: userInfo,
+        username: userData.profile.name,
+        session: true,
       });
+
+      return userInfo;
     } catch (error) {
       this.setState({
         ...this.getState(),
         waiting: false,
+        user: {},
+        username: "",
+        session: false,
       });
+
+      return null;
     }
   }
 
@@ -85,17 +96,35 @@ class AutorizationState extends StoreModule {
 
     const token = localStorage.getItem("token");
 
-    await axios.delete("/api/v1/users/sign", {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Token": token,
-      },
-    });
-    localStorage.removeItem("token");
+    try {
+      await axios.delete("/api/v1/users/sign", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Token": token,
+        },
+      });
+
+      localStorage.removeItem("token");
+
+      this.setState({
+        ...this.getState(),
+        waiting: false,
+        user: {},
+        username: "",
+        session: false,
+      });
+    } catch (error) {
+      this.setState({
+        ...this.getState(),
+        waiting: false,
+      });
+    }
+  }
+
+  resetError() {
     this.setState({
-      waiting: false,
+      ...this.getState(),
       error: null,
-      user: null,
     });
   }
 }

@@ -16,30 +16,29 @@ const LoginPage = () => {
   const { t } = useTranslate();
 
   useEffect(() => {
-    store.actions.autorization.checkAuth();
+    store.actions.autorization.resetError();
   }, []);
 
   const select = useSelector((state) => ({
     error: state.autorization.error,
-    user: state.autorization.user,
   }));
 
-  select.user && navigate('/profile');
-
   const callbacks = {
-    logIn: useCallback((login, password) => store.actions.autorization.logIn(login, password), [store]),
-    logOut: useCallback(() => {
-      store.actions.autorization.logOut();
-      navigate('/login');
-    }, [store]),
+    logIn: useCallback(
+      (login, password) => {
+        store.actions.autorization.logIn(login, password).then(() => {
+          if (localStorage.getItem("token")) navigate("/");
+        });
+      },
+      [store]
+    ),
+    logOut: useCallback(() => store.actions.autorization.logOut(), [store]),
     navigateToLogin: useCallback(() => navigate('/login')),
   };
 
   return (
     <PageLayout>
-      <AuthMenu 
-        user={select.user}
-        profileLink={"/profile"}
+      <AuthMenu
         logOut={callbacks.logOut}
         navigateToLogin={callbacks.navigateToLogin}
       />

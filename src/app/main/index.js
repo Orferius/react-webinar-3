@@ -1,7 +1,6 @@
 import {memo, useEffect, useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from "../../hooks/use-store";
-import useSelector from "../../hooks/use-selector";
 import useTranslate from "../../hooks/use-translate";
 import useInit from "../../hooks/use-init";
 import Navigation from "../../containers/navigation";
@@ -25,19 +24,8 @@ function Main() {
     store.actions.category.loadCategories();
   }, [], true);
 
-  useEffect(() => {
-    store.actions.autorization.checkAuth();
-  }, []);
-
-  const select = useSelector((state) => ({
-    user: state.autorization.user,
-  }));
-
   const callbacks = {
-    logOut: useCallback(() => {
-      store.actions.autorization.logOut();
-      navigate('/login');
-    }, [store]),
+    logOut: useCallback(() => store.actions.autorization.logOut(), [store]),
     navigateToLogin: useCallback(() => navigate('/login')),
   };
 
@@ -45,9 +33,7 @@ function Main() {
 
   return (
     <PageLayout>
-      <AuthMenu 
-        user={select.user}
-        profileLink={"/profile"}
+      <AuthMenu
         logOut={callbacks.logOut}
         navigateToLogin={callbacks.navigateToLogin}
       />

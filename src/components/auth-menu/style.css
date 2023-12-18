@@ -1,5 +1,6 @@
 .AuthMenu {
   display: fixed;
+  border-bottom: 1px solid #DCDCDC;
 }
 
 .AuthMenu-container {

@@ -64,7 +64,20 @@ function getParent(obj, result, data, depth = 0, currList = null) {
   };
 
   if (result.includes(obj)) {
-    return [currList, result.indexOf(obj) + 1, depth + obj.depth];
+    if (currList.length == 0) {
+      return [currList, 0, depth]
+    }
+    let resInd = result.indexOf(obj) + 1
+    for (const potentionalChild of result.slice(resInd)) {
+      if (potentionalChild.depth > obj.depth) {
+        resInd += 1;
+      }
+      else {
+        break;
+      }
+    }
+
+    return [currList, resInd, depth + obj.depth];
   };
 
   currList.push(obj);

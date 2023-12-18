@@ -26,14 +26,9 @@ function Article() {
     store.actions.article.load(params.id);
   }, [params.id]);
 
-  useEffect(() => {
-    store.actions.autorization.checkAuth();
-  }, []);
-
   const select = useSelector(state => ({
     article: state.article.data,
     waiting: state.article.waiting,
-    user: state.autorization.user,
   }));
 
   const {t} = useTranslate();
@@ -41,18 +36,13 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
-    logOut: useCallback(() => {
-      store.actions.autorization.logOut();
-      navigate('/login');
-    }, [store]),
+    logOut: useCallback(() => store.actions.autorization.logOut(), [store]),
     navigateToLogin: useCallback(() => navigate('/login')),
   }
 
   return (
     <PageLayout>
-      <AuthMenu 
-        user={select.user}
-        profileLink={"/profile"}
+      <AuthMenu
         logOut={callbacks.logOut}
         navigateToLogin={callbacks.navigateToLogin}
       />
