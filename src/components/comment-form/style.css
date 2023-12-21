@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 12px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.textarea {
+  height: 76px;
+  margin-bottom: 10px;
+}
+
+.textarea::placeholder {
+  color: #000;
+  font-family: Arial;
+  font-size: 14px;
+}
+
+.btn {
+  width: 90px;
+  height: 21px;
+  font-size: 13px;
+}
