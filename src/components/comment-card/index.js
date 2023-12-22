@@ -5,20 +5,26 @@ import formatDateTime from "../../utils/date-format";
 import CommentForm from "../comment-form";
 import "./style.css";
 
-const CommentCard = ({ comment, onReply, exists, replying }) => {
-
+const CommentCard = (props) => {
   const cn = bem("Comment");
-  const css = { marginLeft: `${comment.level * 30}px` };
+  const css = { marginLeft: `${props.comment.level * 30}px` };
 
   return (
     <div className={cn()} style={css}>
       <div className={cn("info")}>
-        <div className={cn("author")}>{comment.author?.profile?.name}</div>
-        <div className={cn("date")}>{formatDateTime(comment.dateCreate)}</div>
+        <div className={cn("author")}>{props.comment.author?.profile?.name}</div>
+        <div className={cn("date")}>{formatDateTime(props.comment.dateCreate)}</div>
       </div>
-      <div className={cn("text")}>{comment.text}</div>
-      <button className={cn('btn')} onClick={() => onReply(comment._id)}>Ответить</button>
-      {replying && <CommentForm exists={exists}/>}
+      <div className={cn("text")}>{props.comment.text}</div>
+      <button className={cn("btn")} onClick={() => props.onReply(props.comment._id)}>Ответить</button>
+      {props.replying && (
+        <CommentForm
+          exists={props.exists}
+          onCancel={props.onCancel}
+          onSubmit={props.onSubmit}
+          onChange={props.onChange}
+        />
+      )}
     </div>
   );
 };
@@ -36,12 +42,18 @@ CommentCard.propTypes = {
     text: PropTypes.string,
   }),
   onReply: PropTypes.func,
+  onCancel: PropTypes.func,
+  onSubmit: PropTypes.func,
+  onChange: PropTypes.func,
   exists: PropTypes.bool,
-  replying: PropTypes.bool
+  replying: PropTypes.bool,
 };
 
 CommentCard.defaultProps = {
   onReply: () => {},
-}
+  onCancel: () => {},
+  onSubmit: () => {},
+  onChange: () => {},
+};
 
 export default memo(CommentCard);

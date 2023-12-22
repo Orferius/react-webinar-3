@@ -1,10 +1,14 @@
 import { memo, useState, useCallback, useLayoutEffect } from "react";
+import PropTypes from "prop-types";
+import { cn as bem } from "@bem-react/classname";
 import debounce from "lodash.debounce";
 import CommentLink from "../../components/comment-link";
 import "./style.css";
 
 const CommentsForm = (props) => {
+  const cn = bem("CommentForm");
   const [value, setValue] = useState(props.value);
+  const css = props.articleArea ? "" : cn("bottomForm");
 
   const onChangeDebounce = useCallback(
     debounce((value) => props.onChange(value), 600),
@@ -22,30 +26,47 @@ const CommentsForm = (props) => {
     onSubmit: (e) => props.onSubmit(e),
   };
 
+  const btn = props.articleArea ? null : (
+    <button type='button' className={cn('btn')} onClick={props.onCancel}>Отмена</button>
+  );
+
   return (
-    <>
+    <div className={css}>
       {props.exists ? (
-        <form action="submit" className="form" onSubmit={callbacks.onSubmit}>
-          <label htmlFor="comment" className="label">
-            Новый комментарий
-          </label>
+        <form className={cn('form')} onSubmit={callbacks.onSubmit}>
+          <label htmlFor="comment" className={cn('label')}>Новый комментарий</label>
           <textarea
             id="comment"
             name="comment"
             placeholder="Текст"
-            className="textarea"
+            className={cn('textarea')}
             value={value}
             onChange={onChange}
           />
-          <button type="submit" className="btn">
-            Отправить
-          </button>
+          <div className="buttons">
+            <button type="submit" className={cn('btn')}>Отправить</button>
+            {btn}
+          </div>
         </form>
       ) : (
-        <CommentLink type="article" />
+        <CommentLink articleArea={props.articleArea} onCancel={props.onCancel}/>
       )}
-    </>
+    </div>
   );
+};
+
+CommentsForm.propTypes = {
+  value: PropTypes.string,
+  articleArea: PropTypes.bool,
+  onChange: PropTypes.func,
+  onSubmit: PropTypes.func,
+  onCancel: PropTypes.func
+};
+
+CommentsForm.defaultProps = {
+  onCancel: () => {},
+  onSubmit: () => {},
+  onChange: () => {},
 };
 
 export default memo(CommentsForm);

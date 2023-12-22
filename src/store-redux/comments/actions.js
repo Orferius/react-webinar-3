@@ -41,10 +41,8 @@ export default {
           type: "comments/send-success",
           payload: {comment: res.data.result} 
         });
-        console.log('success')
       } catch (e) {
         dispatch({ type: "comments/error" });
-        console.log('error')
       }
     };
   }

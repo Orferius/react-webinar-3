@@ -18,7 +18,8 @@ const CommentsContainer = () => {
   const dispatch = useDispatch();
   const [text, setText] = useState("");
   const [replyingState, setReplyingState] = useState({
-    id: 'article',
+    id: params.id,
+    type: 'article',
     replay: false
   });
 
@@ -29,40 +30,38 @@ const CommentsContainer = () => {
 
     onChange: useCallback((value) => setText(value), []),
 
-    onSubmit: useCallback(
-      (e) => {
+    onSubmit: useCallback((e) => {
         e.preventDefault();
-        dispatch(commentsActions.send(params.id, text, "article"));
+        dispatch(commentsActions.send(replyingState.id, text, replyingState.type));
         callbacks.loadComments();
         setText("");
-      },
-      [params.id, text]
+        callbacks.onCancel();
+      }, [params.id, text]
     ),
 
-    onReply: useCallback(
-      (commentId) => {
+    onReply: useCallback((commentId) => {
+        setText("");
         setReplyingState((prevState) => {
           if (prevState.id === commentId) {
-            return { id: 'article', reply: false };
+            return { id: params.id, type: 'article', reply: false };
           }
-          return { id: commentId, reply: true };
+          return { id: commentId, type: 'comment', reply: true };
         });
-      },
-      [setReplyingState]
+      }, [setReplyingState]
     ),
+
+    onCancel: useCallback(() => setReplyingState({ ...replyingState, type: 'article', reply: false }), [setReplyingState]),
   };
 
   useInit(() => callbacks.loadComments(), []);
 
   const exists = useSelector((state) => state.session.exists);
 
-  const reduxSelect = useSelectorRedux(
-    (state) => ({
+  const reduxSelect = useSelectorRedux((state) => ({
       count: state.comments.data.count,
       comments: state.comments.data.items,
       waiting: state.comments.waiting,
-    }),
-    shallowequal
+    }), shallowequal
   );
 
   const sortedComments = useMemo(() => {
@@ -86,6 +85,8 @@ const CommentsContainer = () => {
     return [];
   }, [reduxSelect.comments]);
 
+  const articleArea = replyingState.type === 'article';
+
   return (
     <Spinner active={reduxSelect.waiting}>
       {reduxSelect.comments && (
@@ -96,11 +97,15 @@ const CommentsContainer = () => {
             onReply={callbacks.onReply}
             replyingState={replyingState}
             exists={exists}
+            onCancel={callbacks.onCancel}
+            onChange={callbacks.onChange}
+            onSubmit={callbacks.onSubmit}
           />
-          {replyingState.id === 'article' && (
+          {articleArea && (
             <CommentForm
               exists={exists}
               value={text}
+              articleArea={articleArea}
               onChange={callbacks.onChange}
               onSubmit={callbacks.onSubmit}
             />

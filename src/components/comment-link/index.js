@@ -1,14 +1,31 @@
 import { memo } from "react";
+import PropTypes from "prop-types";
+import { cn as bem } from "@bem-react/classname";
 import { Link } from "react-router-dom";
 import "./style.css";
 
-const CommentLink = () => {
+const CommentLink = ({articleArea, onCancel}) => {
+  const cn = bem("CommentLink");
+
+  const word = articleArea ? 'комментировать' : 'ответить. ';
+  const btn = articleArea ? null : <button className={cn('cancelBtn')} onClick={onCancel}>Отмена</button>;
+
   return (
-    <span>
-      <Link to="/login" className="link">Войдите</Link>
-      <p>, чтобы иметь возможность комментировать</p>
-    </span>
+    <div>
+      <Link to="/login" className={cn("link")}>Войдите</Link>
+      <p className={cn("text")}>, чтобы иметь возможность {word}</p>
+      {btn}
+    </div>
   );
+};
+
+CommentLink.propTypes = {
+  articleArea: PropTypes.bool,
+  onCancel: PropTypes.func,
+};
+
+CommentLink.defaultProps = {
+  onCancel: () => {},
 };
 
 export default memo(CommentLink);
