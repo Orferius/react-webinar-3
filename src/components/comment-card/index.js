@@ -8,7 +8,7 @@ import "./style.css";
 const CommentCard = (props) => {
   const cn = bem("Comment");
   const level = props.comment.level;
-  const maxLevel = 15;
+  const maxLevel = 10;
   const margin = level > 0 ? 30 : 0;
   const marginStyle = { marginLeft: `${level <= maxLevel ? margin : 0}px` };
 
