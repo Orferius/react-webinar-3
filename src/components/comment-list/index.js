@@ -10,11 +10,14 @@ const CommentList = (props) => {
           key={item._id}
           comment={item}
           onReply={props.onReply}
-          replying={props.replyingState.id === item._id}
+          replyingState={props.replyingState}
           exists={props.exists}
           onCancel={props.onCancel}
           onChange={props.onChange}
           onSubmit={props.onSubmit}
+          userName={props.userName}
+          location={props.location}
+          title={props.title}
         />
       ))}
     </div>
@@ -23,16 +26,20 @@ const CommentList = (props) => {
 
 CommentList.propTypes = {
   comments: PropTypes.arrayOf(PropTypes.shape({
-    _id: PropTypes.string
-  })).isRequired,
+      _id: PropTypes.string
+    })).isRequired,
   replyingState: PropTypes.shape({
-    id: PropTypes.string
+    id: PropTypes.string,
+    type: PropTypes.string,
   }),
+  userName: PropTypes.string,
   exists: PropTypes.bool,
   onReply: PropTypes.func,
   onCancel: PropTypes.func,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
+  location: PropTypes.string,
+  title: PropTypes.string,
 };
 
 CommentList.defaultProps = {

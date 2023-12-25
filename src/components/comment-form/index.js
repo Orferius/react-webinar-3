@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useLayoutEffect } from "react";
+import { memo, useState, useCallback, useLayoutEffect, useEffect } from "react";
 import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import debounce from "lodash.debounce";
@@ -8,6 +8,7 @@ import "./style.css";
 const CommentsForm = (props) => {
   const cn = bem("CommentForm");
   const [value, setValue] = useState(props.value);
+  const [isFormEmpty, setIsFormEmpty] = useState(true);
   const css = props.articleArea ? "" : cn("bottomForm");
 
   const onChangeDebounce = useCallback(
@@ -20,7 +21,17 @@ const CommentsForm = (props) => {
     onChangeDebounce(event.target.value);
   };
 
+  const enableButton = () => {
+    if (value && value.trim() !== '') {
+      setIsFormEmpty(false);
+    } else {
+      setIsFormEmpty(true);
+    }
+  }
+
   useLayoutEffect(() => setValue(props.value), [props.value]);
+
+  useEffect(() => enableButton(), [value]);
 
   const callbacks = {
     onSubmit: (e) => props.onSubmit(e),
@@ -34,7 +45,7 @@ const CommentsForm = (props) => {
     <div className={css}>
       {props.exists ? (
         <form className={cn('form')} onSubmit={callbacks.onSubmit}>
-          <label htmlFor="comment" className={cn('label')}>Новый комментарий</label>
+          <label htmlFor="comment" className={cn('label')}>Новый {props.title}</label>
           <textarea
             id="comment"
             name="comment"
@@ -44,12 +55,12 @@ const CommentsForm = (props) => {
             onChange={onChange}
           />
           <div className="buttons">
-            <button type="submit" className={cn('btn')}>Отправить</button>
+            <button type="submit" className={cn('btn')} disabled={isFormEmpty}>Отправить</button>
             {btn}
           </div>
         </form>
       ) : (
-        <CommentLink articleArea={props.articleArea} onCancel={props.onCancel}/>
+        <CommentLink articleArea={props.articleArea} onCancel={props.onCancel} location={props.location}/>
       )}
     </div>
   );
@@ -60,7 +71,8 @@ CommentsForm.propTypes = {
   articleArea: PropTypes.bool,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
-  onCancel: PropTypes.func
+  onCancel: PropTypes.func,
+  location: PropTypes.string,
 };
 
 CommentsForm.defaultProps = {

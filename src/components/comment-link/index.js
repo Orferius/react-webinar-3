@@ -4,7 +4,7 @@ import { cn as bem } from "@bem-react/classname";
 import { Link } from "react-router-dom";
 import "./style.css";
 
-const CommentLink = ({articleArea, onCancel}) => {
+const CommentLink = ({articleArea, onCancel, location}) => {
   const cn = bem("CommentLink");
 
   const word = articleArea ? 'комментировать' : 'ответить. ';
@@ -12,7 +12,7 @@ const CommentLink = ({articleArea, onCancel}) => {
 
   return (
     <div>
-      <Link to="/login" className={cn("link")}>Войдите</Link>
+      <Link to="/login" className={cn("link")} state={{ back: location }}>Войдите</Link>
       <p className={cn("text")}>, чтобы иметь возможность {word}</p>
       {btn}
     </div>

@@ -1,5 +1,4 @@
 export default {
-
   load: (id) => {
     return async (dispatch, getState, services) => {
       dispatch({ type: "comments/start" });
@@ -23,7 +22,7 @@ export default {
     };
   },
 
-  send: (id, text, type) => {
+  send: (id, text, type, user) => {
     return async (dispatch, getState, services) => {
       dispatch({ type: "comments/start" });
 
@@ -39,10 +38,18 @@ export default {
         });
         dispatch({
           type: "comments/send-success",
-          payload: {comment: res.data.result} 
+          payload: {
+            data: {
+              ...res.data.result,
+              author: {
+                profile: { name: user, _id: res.data.result.author._id },
+              },
+            },
+          },
         });
       } catch (e) {
         dispatch({ type: "comments/error" });
+        console.log(e)
       }
     };
   }

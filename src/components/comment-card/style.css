@@ -13,6 +13,21 @@
   margin-right: 10px;
 }
 
+.Comment-author.active {
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 10px;
+  color: #666666;
+}
+
+.Comment-children {
+  margin-top: 30px;
+}
+
+.Comment-form {
+  margin-left: 30px;
+}
+
 .Comment-date {
   font-size: 12px;
   color: #666666;
@@ -21,6 +36,7 @@
 .Comment-text {
   font-size: 14px;
   margin-bottom: 10px;
+  overflow-wrap: break-word;
 }
 
 .Comment-btn {
